@@ -1,0 +1,16 @@
+{
+  "name": "robot-builder-server",
+  "main": "server.js",
+  "repository": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "kenyx.my",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.15",
+    "morgan": "^1.9.0"
+  }
+}
