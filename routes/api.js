@@ -89,10 +89,10 @@ router.route('/projects/:project_id')
 //widget
 router.route('/widgets')
 	.post(function(req, res) {
-		var widget		 = new Widget();
-		widget.name 	 = req.body.name;
-		widget.imageURL  = req.body.imageURL;
-		widget.imageURL  = req.body.imageURL;
+		var widget = new Widget();
+		widget.name 	 	= req.body.name;
+		widget.imageURL  	= req.body.imageURL;
+		widget.paramCounts  = req.body.paramCounts;
 
 		widget.save(function(err) {
 			if (err)
