@@ -53,12 +53,18 @@ router.route('/projects/:project_id')
 			project.name = req.body.name || project.name;
 
 			if (req.body.widget_id) {
+				
 				Widget.findById(req.body.widget_id, function(err, widget) {
 					if (err) {
 						res.send(err);
 					}
 
-					project.widgets.push(widget);
+					if (req.body.delete_widget) {
+						project.widgets.pull(widget);
+					} else {
+						project.widgets.push(widget);
+					}
+					
 					project.save(function(err) {
 						if (err)
 							res.send(err);
@@ -89,10 +95,10 @@ router.route('/projects/:project_id')
 //widget
 router.route('/widgets')
 	.post(function(req, res) {
-		var widget		 = new Widget();
-		widget.name 	 = req.body.name;
-		widget.imageURL  = req.body.imageURL;
-		widget.imageURL  = req.body.imageURL;
+		var widget = new Widget();
+		widget.name 	  = req.body.name;
+		widget.imageURL   = req.body.imageURL;
+		widget.paramCount = req.body.paramCount;
 
 		widget.save(function(err) {
 			if (err)
