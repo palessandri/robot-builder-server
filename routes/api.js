@@ -53,12 +53,18 @@ router.route('/projects/:project_id')
 			project.name = req.body.name || project.name;
 
 			if (req.body.widget_id) {
+				
 				Widget.findById(req.body.widget_id, function(err, widget) {
 					if (err) {
 						res.send(err);
 					}
 
-					project.widgets.push(widget);
+					if (req.body.delete_widget) {
+						project.widgets.pull(widget);
+					} else {
+						project.widgets.push(widget);
+					}
+					
 					project.save(function(err) {
 						if (err)
 							res.send(err);
