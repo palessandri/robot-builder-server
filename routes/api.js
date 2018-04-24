@@ -23,21 +23,25 @@ router.route('/projects')
 		
 	})
 	.get(function(req, res) {
-		Project.find(function(err, projects) {
-			if (err)
-				res.send(err);
 
-			res.json(projects);
-		});
+		Project.find({})
+			   .populate('widgets')
+			   .exec(function(err, projects) {
+				    if (err)
+					   res.send(err);
+					res.json(projects);
+			   });
 	});
 
 router.route('/projects/:project_id')
 	.get(function(req, res) {
-		Project.findById(req.params.project_id, function(err, project) {
-			if (err)
-				res.send(err);
-			res.json(project);
-		});
+		Project.findById(req.params.project_id)
+			   .populate('widgets')
+			   .exec(function(err, project) {
+				    if (err)
+					   res.send(err);
+					res.json(project);
+			   });
     })
     
 	.put(function(req, res) {
@@ -46,13 +50,28 @@ router.route('/projects/:project_id')
 			if (err)
 				res.send(err);
 
-                project.name = req.body.name;
-                project.save(function(err) {
-                    if (err)
-                        res.send(err);
-                res.json({ message: 'Project updated!' });
-			});
+			project.name = req.body.name || project.name;
 
+			if (req.body.widget_id) {
+				Widget.findById(req.body.widget_id, function(err, widget) {
+					if (err) {
+						res.send(err);
+					}
+
+					project.widgets.push(widget);
+					project.save(function(err) {
+						if (err)
+							res.send(err);
+						res.json({ message: 'Project updated!' });
+					});
+				})
+			} else {
+				project.save(function(err) {
+					if (err)
+						res.send(err);
+					res.json({ message: 'Project updated!' });
+				});
+			}
 		});
 	})
 
@@ -71,9 +90,9 @@ router.route('/projects/:project_id')
 router.route('/widgets')
 	.post(function(req, res) {
 		var widget		 = new Widget();
-		widget.projectId = req.body.projectId;
 		widget.name 	 = req.body.name;
-		widget.image 	 = req.body.image;
+		widget.imageURL  = req.body.imageURL;
+		widget.imageURL  = req.body.imageURL;
 
 		widget.save(function(err) {
 			if (err)
@@ -84,7 +103,7 @@ router.route('/widgets')
 		
 	})
 	.get(function(req, res) {
-		Widget.find({projectId: req.query.project_id}, function(err, widgets) {
+		Widget.find(function(err, widgets) {
 			if (err)
 				res.send(err);
 
@@ -107,8 +126,8 @@ router.route('/widgets/:widget_id')
 			if (err)
 				res.send(err);
 
-			widget.name 	 = req.body.name;
-			widget.projectId = req.body.projectId;
+			widget.name 	  = req.body.name;
+			widget.parameters = req.body.parameters;
 			widget.save(function(err) {
 				if (err)
 					res.send(err);
