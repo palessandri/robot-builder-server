@@ -17,7 +17,8 @@ app.use(bodyParser.json());
 var port  = process.env.PORT || 8080;
 
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://admin:123@ds247449.mlab.com:47449/robots-builder');
+//mongoose.connect('mongodb://admin:123@ds247449.mlab.com:47449/robots-builder');
+mongoose.connect('mongodb://robotbuilder:robotbuilder99@ds231133.mlab.com:31133/robotbuilder');
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
